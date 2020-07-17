@@ -13,4 +13,9 @@ class Query(
     debug = graphene.Field(DjangoDebug, name="_debug")
 
 
-schema = graphene.Schema(query=Query)
+class IngredientMutations(graphene.ObjectType):
+    debug = graphene.Field(DjangoDebug, name="_debug")
+    create_ingredient = cookbook.ingredients.schema.CreateIngredient.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=IngredientMutations)
