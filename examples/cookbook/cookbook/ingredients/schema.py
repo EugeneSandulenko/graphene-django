@@ -37,6 +37,7 @@ class Query(object):
 class IngredientInput(graphene.InputObjectType):
     name = graphene.String()
     notes = graphene.String()
+    category_id = graphene.Int()
 
 
 class CreateIngredient(graphene.Mutation):
@@ -44,17 +45,12 @@ class CreateIngredient(graphene.Mutation):
         input = IngredientInput()
 
     ok = graphene.Boolean()
-    id = graphene.Int()
     ingredient = graphene.Field(IngredientNode)
 
     @staticmethod
     def mutate(root, info, input):
-        category = Category.objects.get(pk=1)
+        category = Category.objects.get(pk=input.category_id)
         ingredient = Ingredient(name=input.name, notes=input.notes, category=category)
         ingredient.save()
-        # new_ingredient = Ingredient.objects.create(ingredient)
-        print(ingredient.id)
-        print(input)
-        print(input.notes)
         ok = True
-        return CreateIngredient(id=ingredient.id, ok=ok, ingredient=ingredient)
+        return CreateIngredient(ok=ok, ingredient=ingredient)
